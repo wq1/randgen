@@ -10,7 +10,7 @@ Windowsだと/dev/urandomや/dev/zeroがないので作りました。
 
 
 例:  
-1Mのダミーファイルを作成する  
+1MiBのダミーファイルを作成する  
 zerogen 1M > test.bin
 
 x264にランダムデータを入力する  
