@@ -3,43 +3,59 @@
 #include <string.h>
 #include <fcntl.h>
 #include <time.h>
+#include <unistd.h>
 
 int main (int argc, char *argv[]) {
 
-	int i;
-	int j;
+	int i = 0;
+	int j = 0;
+	int z = 0;
 	int m = 0x00;
 	int M = 0xFF;
 	long long tgt = 0;
 	long long out = 0;
+	int c;
 
-	if ( argv[1] != NULL ) {
+	while ((c = getopt(argc, argv, "zs:")) != -1) {
+		switch (c) {
 
-		char num[32];
-		sprintf(num, "%s", argv[1]);
+		case 'z':
+			z = 1;
+			break;
 
-		char si[2];
-		sprintf(si, "%c", num[strlen(num)-1]);
+		case 's': {
+			char num[32];
+			sprintf(num, "%s", optarg);
 
-		num[strlen(num)-1] = '\0';
+			char si[2];
+			sprintf(si, "%c", num[strlen(num)-1]);
 
-		if      ( strcmp(si, "K") == 0 )
-			tgt = atoll(num)*1024;
-		else if ( strcmp(si, "M") == 0 )
-			tgt = atoll(num)*1024*1024;
-		else if ( strcmp(si, "G") == 0 )
-			tgt = atoll(num)*1024*1024*1024;
-		else if ( strcmp(si, "T") == 0 )
-			tgt = atoll(num)*1024*1024*1024*1024;
-		else if ( strcmp(si, "P") == 0 )
-			tgt = atoll(num)*1024*1024*1024*1024*1024;
-		else if ( strcmp(si, "E") == 0 )
-			tgt = atoll(num)*1024*1024*1024*1024*1024*1024;
-		else {
-			sprintf(num, "%s", argv[1]);
-			tgt = atoll(num);
+			num[strlen(num)-1] = '\0'; // 単位消去
+
+			if      ( strcmp(si, "K") == 0 )
+				tgt = atoll(num)*1024;
+			else if ( strcmp(si, "M") == 0 )
+				tgt = atoll(num)*1024*1024;
+			else if ( strcmp(si, "G") == 0 )
+				tgt = atoll(num)*1024*1024*1024;
+			else if ( strcmp(si, "T") == 0 )
+				tgt = atoll(num)*1024*1024*1024*1024;
+			else if ( strcmp(si, "P") == 0 )
+				tgt = atoll(num)*1024*1024*1024*1024*1024;
+			else if ( strcmp(si, "E") == 0 )
+				tgt = atoll(num)*1024*1024*1024*1024*1024*1024;
+			else {
+				sprintf(num, "%s", optarg);
+				tgt = atoll(num);
+			}
+
+			break;
 		}
 
+		default: // case '?':
+			break;
+
+		}
 	}
 
 	fflush(stdout);
@@ -48,9 +64,10 @@ int main (int argc, char *argv[]) {
 	srand((unsigned) time(NULL));
 
 	while (1) {
-
-		//i = rand()%0x100; // 0x00-0xFF 低精度
-		i = m + (int)( (double) rand() * (double)(M-m+1) / (double)(RAND_MAX+1) ); // 高精度
+		if ( z != 1 ) { // 遅くならないか心配
+			//i = rand()%0x100; // 0x00-0xFF 低精度
+			i = m + (int)( (double) rand() * (double)(M-m+1) / (double)(RAND_MAX+1) ); // 高精度
+		}
 		j = fwrite(&i,1,1,stdout);
 		out = out+1;
 		if ( out == tgt || j != 1 ) // 目標サイズに達するか受取先が終了する
