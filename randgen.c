@@ -32,7 +32,7 @@ int main (int argc, char *argv[]) {
 
 			num[strlen(num)-1] = '\0'; // 単位消去
 
-			if      ( strcmp(si, "K") == 0 )
+			     if ( strcmp(si, "K") == 0 )
 				tgt = atoll(num)*1024;
 			else if ( strcmp(si, "M") == 0 )
 				tgt = atoll(num)*1024*1024;
@@ -72,9 +72,7 @@ int main (int argc, char *argv[]) {
 		out = out+1;
 		if ( out == tgt || j != 1 ) // 目標サイズに達するか受取先が終了する
 			break;
-
 	}
 
 	return 0;
-
 }
