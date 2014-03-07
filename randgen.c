@@ -4,7 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 
-int main( int argc, char *argv[] ) {
+int main(int argc, char *argv[]) {
 
 	int i = 0;
 	int j = 0;
